@@ -3,7 +3,7 @@ function gerarSenha() {
   const usarLetras = document.getElementById("letras").checked;
   const usarNumeros = document.getElementById("numeros").checked;
   const usarSimbolos = document.getElementById("simbolos").checked;
-  const nome = document.getElementById("nome-senha").value.trim();
+  const nomeSenha = document.getElementById("nomeSenha").value.trim();
 
   let caracteres = "";
   if (usarLetras) caracteres += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -22,60 +22,55 @@ function gerarSenha() {
   }
 
   document.getElementById("resultado").innerText = senha;
-  salvarSenha(nome, senha);
+  salvarSenha(senha, nomeSenha);
 }
 
-function salvarSenha(nome, senha) {
+function salvarSenha(senha, nome) {
   const lista = document.getElementById("lista-senhas");
 
   const item = document.createElement("li");
-  const spanNome = document.createElement("strong");
-  spanNome.innerText = nome ? `${nome}: ` : "Senha: ";
+  const span = document.createElement("span");
+  const inputSenha = document.createElement("input");
+  const toggleBtn = document.createElement("button");
+  const apagarBtn = document.createElement("button");
 
-  const spanSenha = document.createElement("span");
-  spanSenha.innerText = senha;
-  spanSenha.classList.add("senha-oculta");
+  span.innerText = nome ? `🔖 ${nome}: ` : "🔖 Sem nome: ";
+  inputSenha.type = "password";
+  inputSenha.value = senha;
+  inputSenha.readOnly = true;
 
-  const btnToggle = document.createElement("button");
-  btnToggle.innerText = "👁️";
-  btnToggle.className = "toggle-btn";
-  btnToggle.onclick = () => {
-    spanSenha.classList.toggle("senha-oculta");
+  toggleBtn.textContent = "👁️";
+  toggleBtn.onclick = () => {
+    inputSenha.type = inputSenha.type === "password" ? "text" : "password";
   };
 
-  item.appendChild(spanNome);
-  item.appendChild(spanSenha);
-  item.appendChild(btnToggle);
+  apagarBtn.textContent = "❌";
+  apagarBtn.onclick = () => {
+    lista.removeChild(item);
+    let salvas = JSON.parse(localStorage.getItem("senhas")) || [];
+    salvas = salvas.filter(s => !(s.nome === nome && s.valor === senha));
+    localStorage.setItem("senhas", JSON.stringify(salvas));
+  };
+
+  item.appendChild(span);
+  item.appendChild(inputSenha);
+  item.appendChild(toggleBtn);
+  item.appendChild(apagarBtn);
   lista.appendChild(item);
 
   let salvas = JSON.parse(localStorage.getItem("senhas")) || [];
-  salvas.push({ nome, senha });
+  salvas.push({ nome: nome || "Sem nome", valor: senha });
   localStorage.setItem("senhas", JSON.stringify(salvas));
+}
+
+function apagarTodas() {
+  if (confirm("Tem certeza que deseja apagar todas as senhas salvas?")) {
+    localStorage.removeItem("senhas");
+    document.getElementById("lista-senhas").innerHTML = "";
+  }
 }
 
 window.onload = function () {
   const salvas = JSON.parse(localStorage.getItem("senhas")) || [];
-  const lista = document.getElementById("lista-senhas");
-  salvas.forEach(obj => {
-    const item = document.createElement("li");
-
-    const spanNome = document.createElement("strong");
-    spanNome.innerText = obj.nome ? `${obj.nome}: ` : "Senha: ";
-
-    const spanSenha = document.createElement("span");
-    spanSenha.innerText = obj.senha;
-    spanSenha.classList.add("senha-oculta");
-
-    const btnToggle = document.createElement("button");
-    btnToggle.innerText = "👁️";
-    btnToggle.className = "toggle-btn";
-    btnToggle.onclick = () => {
-      spanSenha.classList.toggle("senha-oculta");
-    };
-
-    item.appendChild(spanNome);
-    item.appendChild(spanSenha);
-    item.appendChild(btnToggle);
-    lista.appendChild(item);
-  });
-}
+  salvas.forEach(s => salvarSenha(s.valor, s.nome));
+};

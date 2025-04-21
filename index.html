@@ -18,12 +18,14 @@
       <label><input type="checkbox" id="simbolos"> Símbolos</label>
     </div>
 
-    <label for="nome-senha">Nome da senha:</label>
-    <input type="text" id="nome-senha" placeholder="Ex: Netflix, Banco...">
+    <label for="nomeSenha">Nome para a senha:</label>
+    <input type="text" id="nomeSenha" placeholder="Ex: Email, Banco, etc.">
 
     <button onclick="gerarSenha()">Gerar Senha</button>
 
     <div id="resultado"></div>
+
+    <button onclick="apagarTodas()" class="apagar-todas">🗑️ Apagar Todas</button>
 
     <h2>Senhas Salvas:</h2>
     <ul id="lista-senhas"></ul>
