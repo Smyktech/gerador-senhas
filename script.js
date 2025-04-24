@@ -1,76 +1,112 @@
-function gerarSenha() {
-  const tamanho = document.getElementById("tamanho").value;
-  const usarLetras = document.getElementById("letras").checked;
-  const usarNumeros = document.getElementById("numeros").checked;
-  const usarSimbolos = document.getElementById("simbolos").checked;
-  const nomeSenha = document.getElementById("nomeSenha").value.trim();
+function generatePassword() {
+  const length = document.getElementById("length").value;
+  const includeLetters = document.getElementById("letters").checked;
+  const includeNumbers = document.getElementById("numbers").checked;
+  const includeSymbols = document.getElementById("symbols").checked;
+  const name = document.getElementById("passwordName").value;
 
-  let caracteres = "";
-  if (usarLetras) caracteres += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  if (usarNumeros) caracteres += "0123456789";
-  if (usarSimbolos) caracteres += "!@#$%^&*()-_=+[]{}";
+  const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
+  const symbols = "!@#$%^&*()_+";
 
-  if (caracteres === "") {
-    alert("Selecione pelo menos uma opção!");
+  let characters = "";
+  if (includeLetters) characters += letters;
+  if (includeNumbers) characters += numbers;
+  if (includeSymbols) characters += symbols;
+
+  if (!characters) {
+    alert("Selecione pelo menos uma opção.");
     return;
   }
 
-  let senha = "";
-  for (let i = 0; i < tamanho; i++) {
-    const index = Math.floor(Math.random() * caracteres.length);
-    senha += caracteres[index];
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    password += characters.charAt(Math.floor(Math.random() * characters.length));
   }
 
-  document.getElementById("resultado").innerText = senha;
-  salvarSenha(senha, nomeSenha);
+  document.getElementById("generatedPassword").textContent = password;
+
+  const passwordObj = { name, password, hidden: true };
+  savePassword(passwordObj);
+  renderPasswords();
 }
 
-function salvarSenha(senha, nome) {
-  const lista = document.getElementById("lista-senhas");
-
-  const item = document.createElement("li");
-  const span = document.createElement("span");
-  const inputSenha = document.createElement("input");
-  const toggleBtn = document.createElement("button");
-  const apagarBtn = document.createElement("button");
-
-  span.innerText = nome ? `🔖 ${nome}: ` : "🔖 Sem nome: ";
-  inputSenha.type = "password";
-  inputSenha.value = senha;
-  inputSenha.readOnly = true;
-
-  toggleBtn.textContent = "👁️";
-  toggleBtn.onclick = () => {
-    inputSenha.type = inputSenha.type === "password" ? "text" : "password";
-  };
-
-  apagarBtn.textContent = "❌";
-  apagarBtn.onclick = () => {
-    lista.removeChild(item);
-    let salvas = JSON.parse(localStorage.getItem("senhas")) || [];
-    salvas = salvas.filter(s => !(s.nome === nome && s.valor === senha));
-    localStorage.setItem("senhas", JSON.stringify(salvas));
-  };
-
-  item.appendChild(span);
-  item.appendChild(inputSenha);
-  item.appendChild(toggleBtn);
-  item.appendChild(apagarBtn);
-  lista.appendChild(item);
-
-  let salvas = JSON.parse(localStorage.getItem("senhas")) || [];
-  salvas.push({ nome: nome || "Sem nome", valor: senha });
-  localStorage.setItem("senhas", JSON.stringify(salvas));
+function savePassword(passwordObj) {
+  let saved = JSON.parse(localStorage.getItem("passwords")) || [];
+  saved.push(passwordObj);
+  localStorage.setItem("passwords", JSON.stringify(saved));
 }
 
-function apagarTodas() {
-  if (confirm("Tem certeza que deseja apagar todas as senhas salvas?")) {
-    localStorage.removeItem("senhas");
-    document.getElementById("lista-senhas").innerHTML = "";
+function renderPasswords() {
+  const saved = JSON.parse(localStorage.getItem("passwords")) || [];
+  const container = document.getElementById("savedPasswords");
+  container.innerHTML = "";
+
+  saved.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "password-item";
+
+    const text = document.createElement("div");
+    text.className = "password-text";
+    text.textContent = item.name ? `${item.name}: ${item.hidden ? "******" : item.password}` : (item.hidden ? "******" : item.password);
+
+    const actions = document.createElement("div");
+    actions.className = "password-actions";
+
+    const copyBtn = document.createElement("button");
+    copyBtn.innerHTML = `<i class="ph ph-copy"></i>`;
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(item.password);
+      alert("Senha copiada!");
+    };
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.innerHTML = `<i class="ph ${item.hidden ? "ph-eye" : "ph-eye-slash"}"></i>`;
+    toggleBtn.onclick = () => {
+      item.hidden = !item.hidden;
+      localStorage.setItem("passwords", JSON.stringify(saved));
+      renderPasswords();
+    };
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = `<i class="ph ph-trash"></i>`;
+    deleteBtn.onclick = () => {
+      saved.splice(index, 1);
+      localStorage.setItem("passwords", JSON.stringify(saved));
+      renderPasswords();
+    };
+
+    actions.appendChild(copyBtn);
+    actions.appendChild(toggleBtn);
+    actions.appendChild(deleteBtn);
+
+    div.appendChild(text);
+    div.appendChild(actions);
+    container.appendChild(div);
+  });
+}
+
+function clearPasswords() {
+  if (confirm("Tem certeza que deseja apagar todas as senhas?")) {
+    localStorage.removeItem("passwords");
+    renderPasswords();
   }
 }
 
-window.onload = function () {
-  const salvas = JSON.parse(localStorage.getItem("senhas")) || [];
-  salvas.forEach(s => salvarSenha(s.valor, s.nome));
-};
+function exportPasswords() {
+  const saved = JSON.parse(localStorage.getItem("passwords")) || [];
+  let text = "";
+  saved.forEach(p => {
+    text += (p.name ? `${p.name}: ` : "") + `${p.password}\n`;
+  });
+
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "senhas.txt";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+window.onload = renderPasswords;

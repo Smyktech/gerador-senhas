@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gerador de Senhas</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
   <div class="container">
-    <h1>🔐 Gerador de Senhas</h1>
+    <h1><i class="ph ph-lock"></i> Gerador de Senhas</h1>
 
-    <label for="tamanho">Tamanho da senha:</label>
-    <input type="number" id="tamanho" min="4" max="32" value="12">
+    <label for="length">Tamanho da senha:</label>
+    <input type="number" id="length" min="1" value="10"/>
 
-    <div class="opcoes">
-      <label><input type="checkbox" id="letras" checked> Letras</label>
-      <label><input type="checkbox" id="numeros" checked> Números</label>
-      <label><input type="checkbox" id="simbolos"> Símbolos</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="letters" checked /> Letras</label>
+      <label><input type="checkbox" id="numbers" checked /> Números</label>
+      <label><input type="checkbox" id="symbols" /> Símbolos</label>
     </div>
 
-    <label for="nomeSenha">Nome para a senha:</label>
-    <input type="text" id="nomeSenha" placeholder="Ex: Email, Banco, etc.">
+    <input type="text" id="passwordName" placeholder="Ex: Email, Banco, etc." />
 
-    <button onclick="gerarSenha()">Gerar Senha</button>
+    <button onclick="generatePassword()">Gerar Senha</button>
+    <button class="red" onclick="clearPasswords()"><i class="ph ph-trash"></i> Apagar Todas</button>
 
-    <div id="resultado"></div>
-
-    <button onclick="apagarTodas()" class="apagar-todas">🗑️ Apagar Todas</button>
+    <div id="generatedPassword" class="generated-password"></div>
 
     <h2>Senhas Salvas:</h2>
-    <ul id="lista-senhas"></ul>
-  </div>
+    <div id="savedPasswords"></div>
 
-  <script src="script.js"></script>
+    <button class="blue" onclick="exportPasswords()"><i class="ph ph-export"></i> Exportar</button>
+  </div>
 </body>
 </html>

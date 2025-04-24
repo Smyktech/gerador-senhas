@@ -1,80 +1,103 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: #111;
   color: #fff;
   display: flex;
   justify-content: center;
-  padding: 40px;
+  padding: 20px;
 }
 
 .container {
+  background-color: #1e1e1e;
+  padding: 30px;
+  border-radius: 15px;
+  width: 100%;
   max-width: 400px;
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+h1, h2 {
+  text-align: center;
 }
 
 input[type="number"],
 input[type="text"] {
   width: 100%;
-  padding: 5px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
   border: none;
+  border-radius: 8px;
 }
 
-.opcoes label {
-  display: block;
-  margin: 5px 0;
+.checkbox-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 button {
   width: 100%;
   padding: 10px;
-  background: #28a745;
-  border: none;
-  color: white;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 15px;
-}
-
-.apagar-todas {
-  background: #dc3545;
-}
-
-#resultado {
-  font-size: 18px;
   margin-bottom: 10px;
-  word-break: break-word;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-ul {
-  padding-left: 0;
-  list-style: none;
+button:hover {
+  opacity: 0.9;
 }
 
-li {
-  background: #2c2c2c;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 6px;
+button.red {
+  background-color: #e74c3c;
+  color: white;
+}
+
+button.blue {
+  background-color: #3498db;
+  color: white;
+}
+
+button.green {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.generated-password {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.password-item {
+  background-color: #2c3e50;
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
 }
 
-li input {
-  flex-grow: 1;
-  padding: 4px;
-  border: none;
-  border-radius: 3px;
+.password-text {
+  overflow-wrap: anywhere;
+  flex: 1;
 }
 
-li button {
-  width: auto;
-  padding: 4px 8px;
-  font-size: 14px;
-  margin: 0;
+.password-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.password-actions button {
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #3498db;
+  color: white;
 }
