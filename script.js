@@ -109,4 +109,10 @@ function exportPasswords() {
   URL.revokeObjectURL(url);
 }
 
+document.getElementById("toggle-tema").addEventListener("click", () => {
+  document.body.classList.toggle("claro");
+  const btn = document.getElementById("toggle-tema");
+  btn.textContent = document.body.classList.contains("claro") ? "☀️" : "🌙";
+});
+
 window.onload = renderPasswords;

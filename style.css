@@ -1,23 +1,55 @@
+:root {
+  --bg: #111;
+  --text: #fff;
+  --box: #1e1e1e;
+  --primary: #3498db;
+  --danger: #e74c3c;
+  --green: #2ecc71;
+}
+
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #111;
-  color: #fff;
+  font-family: Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
   display: flex;
   justify-content: center;
   padding: 20px;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.claro {
+  --bg: #f4f4f4;
+  --text: #111;
+  --box: #fff;
 }
 
 .container {
-  background-color: #1e1e1e;
+  background-color: var(--box);
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 15px;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  max-width: 450px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
-h1, h2 {
-  text-align: center;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+#toggle-tema {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: -220px;
+  padding: 10px;
 }
 
 input[type="number"],
@@ -25,14 +57,19 @@ input[type="text"] {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  border: none;
+  border: 2px solid var(--text);
   border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .checkbox-group {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  accent-color: var(--primary);
 }
 
 button {
@@ -51,17 +88,17 @@ button:hover {
 }
 
 button.red {
-  background-color: #e74c3c;
+  background-color: var(--danger);
   color: white;
 }
 
 button.blue {
-  background-color: #3498db;
+  background-color: var(--primary);
   color: white;
 }
 
 button.green {
-  background-color: #2ecc71;
+  background-color: var(--green);
   color: white;
 }
 
@@ -98,6 +135,6 @@ button.green {
   padding: 5px 8px;
   border-radius: 5px;
   font-size: 16px;
-  background-color: #3498db;
+  background-color: var(--primary);
   color: white;
 }
